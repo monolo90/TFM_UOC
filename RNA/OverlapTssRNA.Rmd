@@ -1,0 +1,85 @@
+---
+title: "TSS para representación de Chip-seq"
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+---
+
+
+```{r}
+setwd("~/Escritorio/PEAKS/RNA")
+library(data.table)
+options(scipen=999)
+`RNA_day5-7-15-80` <- readRDS("~/Escritorio/TFM_datos/PEAKS/RNA/RNA_day5-7-15-80.rds")
+RNA= `RNA_day5-7-15-80`
+
+RNA.MAX.day5 =RNA[which(RNA$day5 > 50),c(1,2,3)]
+RNA.MAX.day7 =RNA[which( RNA$day7 > 50),c(1,2,4)]
+RNA.MAX.day15 =RNA[which( RNA$day15 > 50),c(1,2,5)]
+RNA.MAX.day80 =RNA[which( RNA$day80 > 50),c(1,2,6)]
+
+
+
+RNA.MIN.day5 =RNA[which(RNA$day5 == 0),c(1,2,3)]
+RNA.MIN.day7 =RNA[which( RNA$day7 == 0),c(1,2,4)]
+RNA.MIN.day15 =RNA[which( RNA$day15 == 0),c(1,2,5)]
+RNA.MIN.day80 =RNA[which( RNA$day80 == 0),c(1,2,6)]
+
+write.table(RNA.MAX.day5, file = "RNA.MAX.day5.txt", sep = "\t",
+            row.names = FALSE, col.names = FALSE, quote = FALSE)
+
+write.table(RNA.MAX.day7, file = "RNA.MAX.day7.txt", sep = "\t",
+            row.names = FALSE, col.names = FALSE, quote = FALSE)
+write.table(RNA.MAX.day15, file = "RNA.MAX.day15.txt", sep = "\t",
+            row.names = FALSE, col.names = FALSE, quote = FALSE)
+write.table(RNA.MAX.day80, file = "RNA.MAX.day80.txt", sep = "\t",
+            row.names = FALSE, col.names = FALSE, quote = FALSE)
+
+write.table(RNA.MIN.day5, file = "RNA.MIN.day5.txt", sep = "\t",
+            row.names = FALSE, col.names = FALSE, quote = FALSE)
+
+write.table(RNA.MIN.day7, file = "RNA.MIN.day7.txt", sep = "\t",
+            row.names = FALSE, col.names = FALSE, quote = FALSE)
+write.table(RNA.MIN.day15, file = "RNA.MIN.day15.txt", sep = "\t",
+            row.names = FALSE, col.names = FALSE, quote = FALSE)
+write.table(RNA.MIN.day80, file = "RNA.MIN.day80.txt", sep = "\t",
+            row.names = FALSE, col.names = FALSE, quote = FALSE)
+```
+
+Refseq extraido desde el UCSC table para hg19
+
+```{bash}
+tail -n +2 refseq_genes_hg19.txt | awk '
+# Cambiamos el orden como comento victor por si las moscas, y +1 y -1 para ajustar coordenadas
+BEGIN{OFS="\t"}{
+if($4=="+") {print $3,$5,$5+1,$13,".",$4}
+ else {print $3,$6-1,$6,$13,".",$4}
+ }' > refseq_hg19_TSS.bed
+ 
+ 
+```
+
+
+Eliminacion de duplicados
+
+```{bash}
+sort -k1,1 -k2,2n -k3,3n -k6,6 -u refseq_hg19_TSS.bed > refseq_hg19_TSS_unique.bed
+```
+
+Overlap por nombre de genes para extraer el bed
+
+```{bash}
+awk -F'\t' 'FNR==NR {lines[$2]; next} $4 in lines' RNA.MAX.day7.txt refseq_hg19_TSS_unique.bed > TSS_day7.bed
+awk -F'\t' 'FNR==NR {lines[$2]; next} $4 in lines' RNA.MAX.day15.txt refseq_hg19_TSS_unique.bed > TSS_day15.bed
+awk -F'\t' 'FNR==NR {lines[$2]; next} $4 in lines' RNA.MAX.day5.txt refseq_hg19_TSS_unique.bed > TSS_day5.bed
+awk -F'\t' 'FNR==NR {lines[$2]; next} $4 in lines' RNA.MAX.day80.txt refseq_hg19_TSS_unique.bed > TSS_day80.bed
+
+
+awk -F'\t' 'FNR==NR {lines[$2]; next} $4 in lines' RNA.MIN.day7.txt refseq_hg19_TSS_unique.bed > TSS_day7_0.bed
+awk -F'\t' 'FNR==NR {lines[$2]; next} $4 in lines' RNA.MIN.day15.txt refseq_hg19_TSS_unique.bed > TSS_day15_0.bed
+awk -F'\t' 'FNR==NR {lines[$2]; next} $4 in lines' RNA.MIN.day5.txt refseq_hg19_TSS_unique.bed > TSS_day5_0.bed
+awk -F'\t' 'FNR==NR {lines[$2]; next} $4 in lines' RNA.MIN.day80.txt refseq_hg19_TSS_unique.bed > TSS_day80_0.bed
+
+```
+
