@@ -12,4 +12,4 @@ samtools merge -@40 ./finalbamfiles/${day%}.Input.final.bam ./bamfiles/*Input*fi
 macs2 callpeak -t ./finalbamfiles/${day%}.H3K27ac.final.bam -c ./finalbamfiles/${day%}.Input.final.bam -f BAM -n H3K27ac.${day%} -p 0.01 -g 2.7e9 --outdir ./peakcalling --broad --broad-cutoff 0.01
 
 
-echo "FINISH ------------------------------"
+echo "FINISH -------------------------------"
