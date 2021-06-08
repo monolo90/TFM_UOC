@@ -21,5 +21,5 @@ done
 
 cd $directory
 
-echo "FINISH ------------------------------"
+echo "FINISH -----------------------------"
 
