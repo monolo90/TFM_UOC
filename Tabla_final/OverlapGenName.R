@@ -129,4 +129,4 @@ chroms <- c(1:23, "X", "Y", "M")
 chr = paste("^chr", chroms,"$",sep = "")
 H3K27ac_final = H3K27ac_final[grepl(paste(chr, collapse="|"), H3K27ac_final$chr),]
 saveRDS(H3K27ac_final, "H3K27ac_day5-7-15-80.rds")
-
+##########
