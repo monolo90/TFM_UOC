@@ -1,4 +1,4 @@
-
+## Cambio de formato a BED
 library(genomation)
 library(rtracklayer)
 
