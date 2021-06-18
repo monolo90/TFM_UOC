@@ -11,9 +11,9 @@ overlaphic <- function(X, Y)
   overfinal = data.frame()
   for (row in 1:nrow(Y)) {
     #numero+10>= 780 & numero-10<=780
-    #overfinal = rbind(overfinal,X[X$V1==Y$V1[row] & X$V2+50000>=Y$V2[row]  & X$V2-50000<=Y$V2[row] 
-                                 # & X$V3+50000>=Y$V3[row]  & X$V3-50000<=Y$V3[row] , ])
-    overfinal = rbind(overfinal, X[X$V1==Y$V1[row] & X$V2 == Y$V2[row] & X$V3 == Y$V3[row], ])
+    overfinal = rbind(overfinal,X[X$V1==Y$V1[row] & X$V2+50000>=Y$V2[row]  & X$V2-50000<=Y$V2[row] 
+                                  & X$V3+50000>=Y$V3[row]  & X$V3-50000<=Y$V3[row] , ])
+    #overfinal = rbind(overfinal, X[X$V1==Y$V1[row] & X$V2 == Y$V2[row] & X$V3 == Y$V3[row], ])
   }
   return(overfinal)
   }
